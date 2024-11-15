@@ -4,12 +4,12 @@ on: [push]
 
 jobs:
   deploy_linux:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    container: quay.io/condaforge/linux-anvil-cuda:11.8
 
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-20.04"]
         python-version: ["3.10"]
 
     steps:
