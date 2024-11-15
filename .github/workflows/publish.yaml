@@ -19,7 +19,6 @@ jobs:
         shell: bash -l {0}
         run: |
           git config --global --add safe.directory '*'
-          conda install anaconda-client conda-build python=${{ matrix.python-version }}
           conda build recipe/ --output-folder ./pkg/ --no-include-recipe --no-anaconda-upload -c conda-forge
 
       - name: Upload to conda
