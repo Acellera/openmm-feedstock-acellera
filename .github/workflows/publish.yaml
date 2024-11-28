@@ -137,12 +137,70 @@ jobs:
         run: |
           anaconda -t ${{ secrets.ANACONDA_TOKEN_BASIC }} upload -u acellera pkg/*/openmm-*.tar.bz2 --skip-existing
 
-  # deploy_win_64_cuda11:
-  #   strategy:
-  #     fail-fast: false
-  #   runs-on: windows-2019
+  deploy_win_64_cuda11:
+    strategy:
+      fail-fast: false
+      matrix:
+        config_file:
+          [
+            "configs/win_64_cuda_compilernvcccuda_compiler_version11.8numpy1.22python3.10.____cpython.yaml",
+            "configs/win_64_cuda_compilernvcccuda_compiler_version11.8numpy1.22python3.9.____cpython.yaml",
+            "configs/win_64_cuda_compilernvcccuda_compiler_version11.8numpy1.23python3.11.____cpython.yaml",
+            "configs/win_64_cuda_compilernvcccuda_compiler_version11.8numpy1.26python3.12.____cpython.yaml",
+          ]
+    runs-on: windows-2019
 
-  # deploy_win_64_cuda12:
-  #   strategy:
-  #     fail-fast: false
-  #   runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniconda-version: "latest"
+          activate-environment: ../deploy-env
+          python-version: "3.10"
+
+      - name: Build openmm package
+        shell: bash -l {0}
+        run: |
+          git config --global --add safe.directory '*'
+          conda install anaconda-client conda-build
+          conda build recipe/ --variant-config-files ${{ matrix.config_file }} --output-folder ./pkg/ --no-include-recipe --no-anaconda-upload -c conda-forge
+
+      - name: Upload to conda
+        shell: bash -l {0}
+        run: |
+          anaconda -t ${{ secrets.ANACONDA_TOKEN_BASIC }} upload -u acellera pkg/*/openmm-*.tar.bz2 --skip-existing
+
+  deploy_win_64_cuda12:
+    strategy:
+      fail-fast: false
+      matrix:
+        config_file:
+          [
+            "configs/win_64_cuda_compilercuda-nvcccuda_compiler_version12.0numpy1.22python3.10.____cpython.yaml",
+            "configs/win_64_cuda_compilercuda-nvcccuda_compiler_version12.0numpy1.22python3.9.____cpython.yaml",
+            "configs/win_64_cuda_compilercuda-nvcccuda_compiler_version12.0numpy1.23python3.11.____cpython.yaml",
+            "configs/win_64_cuda_compilercuda-nvcccuda_compiler_version12.0numpy1.26python3.12.____cpython.yaml",
+          ]
+    runs-on: windows-2019
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniconda-version: "latest"
+          activate-environment: ../deploy-env
+          python-version: "3.10"
+
+      - name: Build openmm package
+        shell: bash -l {0}
+        run: |
+          git config --global --add safe.directory '*'
+          conda install anaconda-client conda-build
+          conda build recipe/ --variant-config-files ${{ matrix.config_file }} --output-folder ./pkg/ --no-include-recipe --no-anaconda-upload -c conda-forge
+
+      - name: Upload to conda
+        shell: bash -l {0}
+        run: |
+          anaconda -t ${{ secrets.ANACONDA_TOKEN_BASIC }} upload -u acellera pkg/*/openmm-*.tar.bz2 --skip-existing
