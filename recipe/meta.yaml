@@ -96,7 +96,7 @@ requirements:
 
 test:
   requires:
-    - git
+    # - git
     - pocl      # [linux]
     {% if cuda_major >= 12 %}
     # No cuda-driver-dev nor cuda-compat in windows
