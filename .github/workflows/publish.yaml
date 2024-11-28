@@ -3,12 +3,20 @@ name: Test code and publish package
 on: [push]
 
 jobs:
-  deploy_linux:
-    runs-on: ubuntu-latest
-    container: quay.io/condaforge/linux-anvil-cuda:11.8
-
+  deploy_linux_cuda11:
     strategy:
       fail-fast: false
+      matrix:
+        config_file:
+          [
+            "configs/linux_64_c_compiler_version11cuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11numpy1.26python3.9.____cpython.yaml",
+            "configs/linux_64_c_compiler_version11cuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11numpy1.26python3.10.____cpython.yaml",
+            "configs/linux_64_c_compiler_version11cuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11numpy1.26python3.11.____cpython.yaml",
+            "configs/linux_64_c_compiler_version11cuda_compilernvcccuda_compiler_version11.8cxx_compiler_version11numpy1.26python3.12.____cpython.yaml",
+          ]
+
+    runs-on: ubuntu-latest
+    container: quay.io/condaforge/linux-anvil-cuda:11.8
 
     steps:
       - uses: actions/checkout@v1
@@ -17,7 +25,36 @@ jobs:
         shell: bash -l {0}
         run: |
           git config --global --add safe.directory '*'
-          conda build recipe/ --output-folder ./pkg/ --no-include-recipe --no-anaconda-upload -c conda-forge
+          conda build recipe/ --variant-config-files ${{ matrix.config_file }} --output-folder ./pkg/ --no-include-recipe --no-anaconda-upload -c conda-forge
+
+      - name: Upload to conda
+        shell: bash -l {0}
+        run: |
+          /opt/conda/bin/anaconda -t ${{ secrets.ANACONDA_TOKEN_BASIC }} upload -u acellera pkg/linux-64/openmm-*.tar.bz2
+
+  deploy_linux_cuda12:
+    strategy:
+      fail-fast: false
+      matrix:
+        config_file:
+          [
+            "configs/linux_64_c_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.22python3.9.____cpython.yaml",
+            "configs/linux_64_c_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.22python3.10.____cpython.yaml",
+            "configs/linux_64_c_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.22python3.11.____cpython.yaml",
+            "configs/linux_64_c_compiler_version12cuda_compilercuda-nvcccuda_compiler_version12.0cxx_compiler_version12numpy1.22python3.12.____cpython.yaml",
+          ]
+
+    runs-on: ubuntu-latest
+    container: quay.io/condaforge/linux-anvil-cos7-x86_64
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Build openmm package
+        shell: bash -l {0}
+        run: |
+          git config --global --add safe.directory '*'
+          conda build recipe/ --variant-config-files ${{ matrix.config_file }} --output-folder ./pkg/ --no-include-recipe --no-anaconda-upload -c conda-forge
 
       - name: Upload to conda
         shell: bash -l {0}
