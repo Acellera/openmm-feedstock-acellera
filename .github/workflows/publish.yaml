@@ -91,12 +91,13 @@ jobs:
         shell: bash -l {0}
         run: |
           git config --global --add safe.directory '*'
+          conda install anaconda-client conda-build 
           conda build recipe/ --variant-config-files ${{ matrix.config_file }} --output-folder ./pkg/ --no-include-recipe --no-anaconda-upload -c conda-forge
 
       - name: Upload to conda
         shell: bash -l {0}
         run: |
-          /opt/conda/bin/anaconda -t ${{ secrets.ANACONDA_TOKEN_BASIC }} upload -u acellera pkg/*/openmm-*.tar.bz2 --skip-existing
+          anaconda -t ${{ secrets.ANACONDA_TOKEN_BASIC }} upload -u acellera pkg/*/openmm-*.tar.bz2 --skip-existing
 
   deploy_osx_arm64:
     strategy:
@@ -128,12 +129,13 @@ jobs:
         shell: bash -l {0}
         run: |
           git config --global --add safe.directory '*'
+          conda install anaconda-client conda-build
           conda build recipe/ --variant-config-files ${{ matrix.config_file }} --output-folder ./pkg/ --no-include-recipe --no-anaconda-upload -c conda-forge
 
       - name: Upload to conda
         shell: bash -l {0}
         run: |
-          /opt/conda/bin/anaconda -t ${{ secrets.ANACONDA_TOKEN_BASIC }} upload -u acellera pkg/*/openmm-*.tar.bz2 --skip-existing
+          anaconda -t ${{ secrets.ANACONDA_TOKEN_BASIC }} upload -u acellera pkg/*/openmm-*.tar.bz2 --skip-existing
 
   # deploy_win_64_cuda11:
   #   strategy:
