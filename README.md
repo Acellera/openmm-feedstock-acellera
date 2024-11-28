@@ -1,7 +1,7 @@
-# OpeMM Feedstock controlled by Acellera
+# OpeMM Feedstock by Acellera
 
-This is a partial fork of the conda-forge feedstock for OpenMM. The idea is to be able to make OpenMM releases
-from specific commits without having to wait for Peter to make a new release which can take months.
+This is a partial fork of the conda-forge feedstock for OpenMM.
+The idea is to be able to quickly create OpenMM release candidates from specific commits without having to wait for an official OpenMM release.
 
 To create a new release you need to:
 
