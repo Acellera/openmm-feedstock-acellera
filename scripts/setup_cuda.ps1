@@ -1,4 +1,4 @@
-$CUDA_VERSION_FULL = $env:INPUT_CUDA_VERSION # v12.5.0 or v11.8.0
+$CUDA_VERSION_FULL = $env:INPUT_CUDA_VERSION # v12.5.0 or v11.8.0 or v12.0.0
 
 # Make sure CUDA_VERSION_FULL is set and valid, otherwise error.
 # Validate CUDA version, extracting components via regex
@@ -19,6 +19,8 @@ $installer = "cuda.exe"
 
 if ($CUDA_VERSION_FULL -eq "12.5.0") {
     $downloadUrl = "https://developer.download.nvidia.com/compute/cuda/12.5.0/local_installers/cuda_12.5.0_555.85_windows.exe"
+} elseif ($CUDA_VERSION_FULL -eq "12.0.0") {
+    $downloadUrl = "https://developer.download.nvidia.com/compute/cuda/12.0.0/local_installers/cuda_12.0.0_527.41_windows.exe"
 } elseif ($CUDA_VERSION_FULL -eq "11.8.0") {
     $downloadUrl = "https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda_11.8.0_522.06_windows.exe"
 } else {
