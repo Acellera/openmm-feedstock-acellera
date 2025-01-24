@@ -1,5 +1,5 @@
 {% set name = "openmm" %}
-{% set version = "8.2.1_rc1" %}
+{% set version = "8.2.1_rc2" %}
 {% set build = 0 %}
 {% set with_test_suite = "false" %}
 #{% set with_test_suite = "true" %}  # [(osx and arm64)]
@@ -16,7 +16,7 @@ package:
 
 source:
   git_url: https://github.com/openmm/{{ name }}.git
-  git_rev: "78c1536"
+  git_rev: "c7216a9"
 
 build:
   number: {{ build }}
